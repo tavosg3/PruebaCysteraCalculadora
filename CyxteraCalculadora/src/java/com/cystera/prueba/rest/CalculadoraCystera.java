@@ -5,7 +5,11 @@
  */
 package com.cystera.prueba.rest;
 
+import com.cystera.prueba.api.IdSesionDTO;
+import com.cystera.prueba.api.RespuestaDTO;
 import com.cystera.prueba.ejb.CalculadoraCysteraBean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -35,8 +39,14 @@ public class CalculadoraCystera {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/nuevaSesion")
     public Response nuevaSesion(){
+        try {
+            Logger.getLogger(CalculadoraCystera.class.getName()).log(Level.INFO, "[CalculadoraCystera][nuevaSesion]");
+            return Response.status(Response.Status.OK).entity(cysteraBean.iniciarSesion()).build();
+        } catch (Exception ex) {
+            Logger.getLogger(CalculadoraCystera.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(Response.Status.SEE_OTHER).entity(new RespuestaDTO(null,"Error creando Sesion")).build();
+        }
         
-        return Response.status(Response.Status.OK).entity(cysteraBean.iniciarSesion()).build();
     }
     
     /**
@@ -51,7 +61,13 @@ public class CalculadoraCystera {
     @Path("/agregarOperando")
     public Response agregarOperando(@QueryParam("operando") double operando, @QueryParam("idSesion") int idSesion){
    
-       return Response.status(Response.Status.OK).entity(cysteraBean.agregarOperando(operando, idSesion)).build();
+        try {
+            Logger.getLogger(CalculadoraCystera.class.getName()).log(Level.INFO, "{0}[CalculadoraCystera][agregarOperando] operando {1} idSesion {2}", new Object[]{idSesion, operando, idSesion});
+            return Response.status(Response.Status.OK).entity(cysteraBean.agregarOperando(operando, idSesion)).build();
+        } catch (Exception ex) {
+            Logger.getLogger(CalculadoraCystera.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(Response.Status.SEE_OTHER).entity(new RespuestaDTO(null,"Error obteniendo Sesion " + idSesion)).build();
+        }
     }
     
     /**
@@ -66,7 +82,13 @@ public class CalculadoraCystera {
     @Path("/calcular")
     public Response calcular(@QueryParam("operacion") String operacion, @QueryParam("idSesion") int idSesion){
    
-       return Response.status(Response.Status.OK).entity(cysteraBean.calcular(operacion, idSesion)).build();
+        try {
+            Logger.getLogger(CalculadoraCystera.class.getName()).log(Level.INFO, "[CalculadoraCystera][calcular] operando {1} idSesion {2}", new Object[]{idSesion, operacion, idSesion});
+            return Response.status(Response.Status.OK).entity(cysteraBean.calcular(operacion, idSesion)).build();
+        } catch (Exception ex) {
+            Logger.getLogger(CalculadoraCystera.class.getName()).log(Level.SEVERE, null, ex);            
+            return Response.status(Response.Status.SEE_OTHER).entity(new RespuestaDTO(null,ex.getMessage())).build();
+        }
     }
     
     

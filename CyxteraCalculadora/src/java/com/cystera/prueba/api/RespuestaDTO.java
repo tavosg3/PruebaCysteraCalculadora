@@ -19,6 +19,14 @@ public class RespuestaDTO implements Serializable{
 
     private String mensaje;
 
+    public RespuestaDTO() {
+    }
+    
+    public RespuestaDTO(Double resultado, String mensaje) {
+        this.resultado = resultado;
+        this.mensaje = mensaje;
+    }
+
     public Double getResultado() {
         return resultado;
     }
